@@ -9,7 +9,7 @@ public class Rellotge implements Runnable{
     }
 
     public Integer minutsEnMilisegons(int minuts) {
-        return minuts * 60000;
+        return minuts * 1000;
     }
 
     public Integer getMinutoActual() {

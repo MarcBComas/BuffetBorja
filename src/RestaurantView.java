@@ -31,13 +31,21 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         add(this.panelChefs, c);
         c.gridy = 2;
         add(this.panelComensals, c);
+        c.gridy = 3;
+        add(controlPanel, c);
+    }
+
+    public void refresh() {
+        this.panelBuffet.setStatistics();
+        this.panelChefs.setStatistics();
+        this.panelComensals.setStatistics();
     }
 
     public void play() {
         this.controller.play();
     }
 
-    public void pause() {
+    public void pause() throws InterruptedException {
         this.controller.pause();
     }
 
@@ -47,7 +55,9 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
 
     @Override
     public void run() {
-
+        while (true) {
+            refresh();
+        }
     }
 
     @Override

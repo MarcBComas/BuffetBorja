@@ -2,11 +2,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class StatisticsPanelComensal extends JScrollPane {
-    private JTable tablaComensals;
-    private DefaultTableModel dtmComensals;
+    private JTable tabla;
+    private DefaultTableModel dtm;
 
     public StatisticsPanelComensal() {
-        dtmComensals = new DefaultTableModel() {
+        dtm = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -16,9 +16,18 @@ public class StatisticsPanelComensal extends JScrollPane {
         Object[][] data = new Object[][] {
                 {"Comensals" , 0, 0, 0, 0, 0, 0}
         };
-        tablaComensals = new JTable();
-        dtmComensals.setDataVector(data, columnNames);
-        tablaComensals.setModel(dtmComensals);
-        setViewportView(tablaComensals);
+        tabla = new JTable();
+        dtm.setDataVector(data, columnNames);
+        tabla.setModel(dtm);
+        setViewportView(tabla);
+    }
+
+    public void setStatistics() {
+        dtm.setValueAt(EstadistiquesComensals.comensalsPerEstat[0], 0, 1);
+        dtm.setValueAt(EstadistiquesComensals.comensalsPerEstat[1], 0, 2);
+        dtm.setValueAt(EstadistiquesComensals.comensalsPerEstat[2], 0, 3);
+        dtm.setValueAt(EstadistiquesComensals.tempsMenjant, 0, 4);
+        dtm.setValueAt(EstadistiquesComensals.tempsTertulia, 0, 5);
+        dtm.setValueAt(EstadistiquesComensals.tempsEsperant, 0, 6);
     }
 }

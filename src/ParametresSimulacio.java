@@ -10,6 +10,7 @@ public class ParametresSimulacio {
    public static int tempsCuinantChef = 5;
    public static Rango numComensal = new Rango(12,36);
    public static Rango numChefPerGrill = new Rango(1,3);
+   public static int tempsDescansChef = 5;
 
     public ParametresSimulacio() {
         maxPlatAreaBuffet = 4;

@@ -6,7 +6,7 @@ public class RestaurantController {
         this.model.play();
     }
 
-    public void pause() {
+    public void pause() throws InterruptedException {
         this.model.pause();
     }
 
@@ -14,8 +14,8 @@ public class RestaurantController {
         this.model.stop();
     }
 
-    public void getStatistics() {
-
+    public Estadistiques getStatistics() {
+        return this.model.getEstadistiques();
     }
 
     public void canviStatusComensal() {
@@ -28,5 +28,13 @@ public class RestaurantController {
 
     public void canviStatusGrill() {
 
+    }
+
+    public void setModel(RestaurantModel model) {
+        this.model = model;
+    }
+
+    public void setView(RestaurantView view) {
+        this.view = view;
     }
 }

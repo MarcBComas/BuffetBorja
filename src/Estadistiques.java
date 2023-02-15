@@ -3,9 +3,33 @@ public class Estadistiques {
     public EstadistiquesComensals comensal;
     public EstadistiquesBuffets areaBuffet;
 
-    public Estadistiques() {
-        chef = new EstadistiquesChefs();
-        comensal = new EstadistiquesComensals();
-        areaBuffet = new EstadistiquesBuffets();
+    public Estadistiques(EstadistiquesChefs chef, EstadistiquesComensals comensal, EstadistiquesBuffets areaBuffet) {
+        this.chef = chef;
+        this.comensal = comensal;
+        this.areaBuffet = areaBuffet;
+    }
+
+    public EstadistiquesChefs getChef() {
+        return chef;
+    }
+
+    public void setChef(EstadistiquesChefs chef) {
+        this.chef = chef;
+    }
+
+    public EstadistiquesComensals getComensal() {
+        return comensal;
+    }
+
+    public void setComensal(EstadistiquesComensals comensal) {
+        this.comensal = comensal;
+    }
+
+    public EstadistiquesBuffets getAreaBuffet() {
+        return areaBuffet;
+    }
+
+    public void setAreaBuffet(EstadistiquesBuffets areaBuffet) {
+        this.areaBuffet = areaBuffet;
     }
 }
