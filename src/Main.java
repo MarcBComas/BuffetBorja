@@ -1,5 +1,6 @@
-import java.util.ArrayList;
-import java.util.Random;
+import Controller.RestaurantController;
+import Model.RestaurantModel;
+import View.RestaurantView;
 
 public class Main {
 
@@ -11,6 +12,5 @@ public class Main {
         c.setView(v);
         new Thread(m).start();
         new Thread(v).start();
-
     }
 }

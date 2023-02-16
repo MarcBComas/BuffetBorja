@@ -1,3 +1,7 @@
+package View;
+
+import View.RestaurantView;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -9,7 +13,13 @@ public class ControlPanel extends JPanel{
 
     public ControlPanel(RestaurantView view) {
         this.view = view;
-        bPlay.addActionListener(e -> view.play());
+        bPlay.addActionListener(e -> {
+            try {
+                view.play();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         bPause.addActionListener(e -> {
             try {
                 view.pause();

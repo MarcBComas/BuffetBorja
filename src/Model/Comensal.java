@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.Random;
 
 import static java.lang.Thread.sleep;
@@ -11,6 +13,7 @@ public class Comensal implements Runnable{
     private ComensalStatus status;
     private Rellotge rellotge;
     private AreaBuffet[] buffets;
+    private GeneralStatus gStatus;
 
     public Comensal(AreaBuffet[] buffets) {
         this.platsMenjats = 0;
@@ -55,15 +58,20 @@ public class Comensal implements Runnable{
         int iniciEspera = rellotge.getMinutoActual();
         while(!agafat) {
             agafat = this.buffets[areaBuffet].retirarPlat();
+            if(!agafat) {
+                areaBuffet = getBuffetRandom();
+            }
         }
         this.tempsEspera += rellotge.getIntervalEnMinuts(iniciEspera);
         estadistiques.tempsEsperant += rellotge.getIntervalEnMinuts(iniciEspera);
     }
 
     public void setStatus(ComensalStatus status) {
-        estadistiques.comensalsPerEstat[this.status.ordinal()]--;
+        synchronized (estadistiques) {
+            estadistiques.comensalsPerEstat[this.status.ordinal()]--;
+            estadistiques.comensalsPerEstat[status.ordinal()]++;
+        }
         this.status = status;
-        estadistiques.comensalsPerEstat[this.status.ordinal()]++;
     }
 
     public int getBuffetRandom(){
@@ -71,15 +79,22 @@ public class Comensal implements Runnable{
         return r.nextInt(3);
     }
 
+    public void setgStatus(GeneralStatus gStatus) {
+        this.gStatus = gStatus;
+    }
+
     @Override
     public void run() {
-        while(true) {
-            agafarPlat();
-            try {
-                menjar();
-                tertulia();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        while(!(gStatus == GeneralStatus.STOPPED)) {
+
+            while(gStatus == GeneralStatus.RUNNING) {
+                agafarPlat();
+                try {
+                    menjar();
+                    tertulia();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

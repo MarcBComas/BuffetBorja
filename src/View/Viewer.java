@@ -1,3 +1,5 @@
+package View;
+
 import java.awt.Canvas;
 import java.awt.Image;
 

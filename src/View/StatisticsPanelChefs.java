@@ -1,3 +1,7 @@
+package View;
+
+import Model.EstadistiquesChefs;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;

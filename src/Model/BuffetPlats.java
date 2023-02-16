@@ -1,3 +1,5 @@
+package Model;
+
 public class BuffetPlats {
     protected int capacitatMaxima;
     protected int quantitatActual;
@@ -11,16 +13,17 @@ public class BuffetPlats {
         if (quantitatActual < capacitatMaxima) {
             quantitatActual++;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public Boolean retirarPlat() {
         if (quantitatActual > 0) {
             quantitatActual--;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
-
 }

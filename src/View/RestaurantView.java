@@ -1,3 +1,7 @@
+package View;
+
+import Controller.RestaurantController;
+
 import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -33,6 +37,9 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         add(this.panelComensals, c);
         c.gridy = 3;
         add(controlPanel, c);
+        c.gridx = 1;
+        c.gridy = 0;
+        add(viewer,c);
     }
 
     public void refresh() {
@@ -41,7 +48,7 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         this.panelComensals.setStatistics();
     }
 
-    public void play() {
+    public void play() throws InterruptedException {
         this.controller.play();
     }
 

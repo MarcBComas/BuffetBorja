@@ -1,3 +1,7 @@
+package View;
+
+import Model.EstadistiquesComensals;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 

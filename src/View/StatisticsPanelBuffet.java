@@ -1,3 +1,7 @@
+package View;
+
+import Model.EstadistiquesBuffets;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,10 +30,10 @@ public class StatisticsPanelBuffet extends JScrollPane {
     }
 
     public void setStatistics() {
-        for(int i=0; i<EstadistiquesBuffets.platsPerAreaBuffet.length; i++) {
+        for(int i = 0; i< EstadistiquesBuffets.platsPerAreaBuffet.length; i++) {
             dtm.setValueAt(EstadistiquesBuffets.platsPerAreaBuffet[i], i, 1);
         }
-        for(int i=0; i<EstadistiquesBuffets.platsEnColaPerAreaBuffet.length; i++) {
+        for(int i = 0; i< EstadistiquesBuffets.platsEnColaPerAreaBuffet.length; i++) {
             dtm.setValueAt(EstadistiquesBuffets.platsEnColaPerAreaBuffet[i], i, 2);
         }
     }

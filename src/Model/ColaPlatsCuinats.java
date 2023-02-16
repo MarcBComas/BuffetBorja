@@ -1,3 +1,5 @@
+package Model;
+
 public class ColaPlatsCuinats extends BuffetPlats{
     private AreaBuffet area;
     public ColaPlatsCuinats(AreaBuffet area) {
@@ -6,20 +8,20 @@ public class ColaPlatsCuinats extends BuffetPlats{
     }
 
     public boolean afegirPlat(Grill grill) {
-        if (!super.afegirPlat()) {
+        if (super.afegirPlat()) {
+            return true;
+        } else {
             grill.treureDeServei();
             return false;
-        } else {
-            return true;
         }
     }
 
     public boolean retirarPlat(Grill grill) {
-        if (!super.retirarPlat()) {
+        if (super.retirarPlat()) {
+            return true;
+        } else {
             grill.posarEnServei();
             return false;
-        } else {
-            return true;
         }
     }
 }

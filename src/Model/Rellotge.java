@@ -1,7 +1,10 @@
+package Model;
+
 public class Rellotge implements Runnable{
     private static Rellotge rellotge;
     private int minutActual;
     private int multiplicadorTemps;
+    private GeneralStatus estat;
 
     public Rellotge() {
         this.minutActual = 0;
@@ -27,15 +30,25 @@ public class Rellotge implements Runnable{
         return rellotge;
     }
 
+    public static Rellotge reset() {
+        return rellotge = new Rellotge();
+    }
+
+    public void setEstat(GeneralStatus estat) {
+        this.estat = estat;
+    }
+
     @Override
     public void run() {
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        while (estat != GeneralStatus.STOPPED) {
+            while (estat == GeneralStatus.RUNNING) {
+                try {
+                    Thread.sleep(1000);
+                    this.minutActual++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            this.minutActual++;
         }
     }
 }

@@ -1,3 +1,5 @@
+package Model;
+
 import static java.lang.Thread.sleep;
 
 public class Chef implements Runnable{
@@ -12,6 +14,7 @@ public class Chef implements Runnable{
     private Rellotge rellotge;
     private AreaBuffet buffet;
     private Grill grill;
+    private GeneralStatus gStatus;
 
     public Chef(Rellotge rellotge, AreaBuffet buffet, Grill grill) {
         this.tempsTotalCuinant = 0;
@@ -21,54 +24,53 @@ public class Chef implements Runnable{
         this.tempsEspera = 0;
         this.nombrePlatsCuinats = 0;
         this.status = ChefStatus.DESCANSANT;
-        estadistiques.chefsPerEstat[this.status.ordinal()]++;
+        synchronized (estadistiques) {
+            estadistiques.chefsPerEstat[this.status.ordinal()]++;
+        }
         this.rellotge = rellotge;
         this.buffet = buffet;
         this.grill = grill;
     }
     public synchronized void cocinar() throws InterruptedException {
-        System.out.println("El chef comença a cuinar");
         if(this.grill.afegirPlat()) {
             setStatus(ChefStatus.CUINANT);
             sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsCuinantChef));
             this.nombrePlatsCuinats++;
             this.tempsTotalCuinant += ParametresSimulacio.tempsCuinantChef;
-            estadistiques.tempsCuinant += ParametresSimulacio.tempsCuinantChef;
-            estadistiques.platsCuinats++;
+            synchronized (estadistiques) {
+                estadistiques.tempsCuinant += ParametresSimulacio.tempsCuinantChef;
+                estadistiques.platsCuinats++;
+            }
             tempsNoDescans += ParametresSimulacio.tempsCuinantChef;
+            grill.retirarPlat();
             entregarPlat();
         } else {
-            System.out.println("El grill està ple");
             this.tempsEspera += ParametresSimulacio.tempsCuinantChef;
             sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsCuinantChef));
             cocinar();
         }
-
     }
 
     public synchronized void descansar() throws InterruptedException {
-        System.out.println("El chef comença a descansar");
         setStatus(ChefStatus.DESCANSANT);
         sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsDescansChef));
         this.tempsNoDescans = 0;
     }
 
-    public synchronized void entregarPlat(){
-        System.out.println("El chef comença a entregar el plat");
+    public synchronized void entregarPlat() throws InterruptedException {
         setStatus(ChefStatus.ENTREGANT);
-        grill.retirarPlat();
         Boolean entregat = false;
         while (!entregat) {
-            System.out.println("El chef intenta entregar el plat");
             entregat = buffet.afegirPlat();
         }
-        System.out.println("El chef ha entregat el plat");
     }
 
     public void setStatus(ChefStatus status) {
-        estadistiques.chefsPerEstat[this.status.ordinal()]--;
+        synchronized (estadistiques) {
+            estadistiques.chefsPerEstat[this.status.ordinal()]--;
+            estadistiques.chefsPerEstat[status.ordinal()]++;
+        }
         this.status = status;
-        estadistiques.chefsPerEstat[this.status.ordinal()]++;
     }
 
     public void setGrill(Grill grill) {
@@ -79,18 +81,25 @@ public class Chef implements Runnable{
         return estadistiques;
     }
 
+    public void pause() throws InterruptedException {
+        wait();
+    }
+
+    public void setgStatus(GeneralStatus gStatus) {
+        this.gStatus = gStatus;
+    }
+
     @Override
     public void run() {
-        while(true) {
-            if(tempsNoDescans < 30) {
+        while(!(gStatus == GeneralStatus.STOPPED)) {
+            while (gStatus == GeneralStatus.RUNNING) {
                 try {
-                    cocinar();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    descansar();
+                    if (this.tempsNoDescans < 30) {
+                        cocinar();
+
+                    } else {
+                        descansar();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

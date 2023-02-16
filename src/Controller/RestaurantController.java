@@ -1,8 +1,14 @@
+package Controller;
+
+import Model.Estadistiques;
+import Model.RestaurantModel;
+import View.RestaurantView;
+
 public class RestaurantController {
     private RestaurantModel model;
     private RestaurantView view;
 
-    public void play()  {
+    public void play() throws InterruptedException {
         this.model.play();
     }
 

@@ -1,3 +1,5 @@
+package Model;
+
 public class EstadistiquesChefs {
     public static int tempsDescansant;
     public static int tempsCuinant;

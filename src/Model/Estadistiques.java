@@ -1,3 +1,5 @@
+package Model;
+
 public class Estadistiques {
     public EstadistiquesChefs chef;
     public EstadistiquesComensals comensal;

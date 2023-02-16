@@ -1,3 +1,5 @@
+package Model;
+
 public class Grill extends BuffetPlats{
     private boolean enServei;
 
@@ -12,6 +14,10 @@ public class Grill extends BuffetPlats{
         } else {
             return false;
         }
+    }
+
+    public synchronized Boolean retirarPlat() {
+            return super.retirarPlat();
     }
 
     public void posarEnServei() {
