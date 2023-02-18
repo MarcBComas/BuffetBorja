@@ -76,6 +76,8 @@ public class RestaurantModel implements Runnable {
 
     public void stop(){
         rellotge.reset();
+        Chef.setgStatus(GeneralStatus.STOPPED);
+        Comensal.setgStatus(GeneralStatus.STOPPED);
         setChefs();
         setComensals();
         new EstadistiquesChefs();
@@ -83,21 +85,17 @@ public class RestaurantModel implements Runnable {
         new EstadistiquesBuffets();
     }
     public synchronized void pause() throws InterruptedException {
-        for (int i = 0; i < llistaComensals.size(); i++) {
-                llistaComensals.get(i).setgStatus(GeneralStatus.PAUSED);
-        }
-        for (int i = 0; i < llistaChefs.size(); i++) {
-            llistaChefs.get(i).setgStatus(GeneralStatus.PAUSED);
-        }
+        Chef.setgStatus(GeneralStatus.PAUSED);
+        Comensal.setgStatus(GeneralStatus.PAUSED);
     }
 
     public synchronized void play() throws InterruptedException {
+        Chef.setgStatus(GeneralStatus.RUNNING);
+        Comensal.setgStatus(GeneralStatus.RUNNING);
         for (int i = 0; i < llistaComensals.size(); i++) {
-            llistaComensals.get(i).setgStatus(GeneralStatus.RUNNING);
             new Thread(llistaComensals.get(i)).start();
         }
         for (int i = 0; i < llistaChefs.size(); i++) {
-            llistaChefs.get(i).setgStatus(GeneralStatus.RUNNING);
             new Thread(llistaChefs.get(i)).start();
         }
         new Thread(rellotge).start();

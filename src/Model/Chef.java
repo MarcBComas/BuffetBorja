@@ -14,7 +14,7 @@ public class Chef implements Runnable{
     private Rellotge rellotge;
     private AreaBuffet buffet;
     private Grill grill;
-    private GeneralStatus gStatus;
+    private static GeneralStatus gStatus;
 
     public Chef(Rellotge rellotge, AreaBuffet buffet, Grill grill) {
         this.tempsTotalCuinant = 0;
@@ -54,6 +54,9 @@ public class Chef implements Runnable{
     public synchronized void descansar() throws InterruptedException {
         setStatus(ChefStatus.DESCANSANT);
         sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsDescansChef));
+        synchronized (estadistiques) {
+            estadistiques.tempsDescansant += ParametresSimulacio.tempsDescansChef;
+        }
         this.tempsNoDescans = 0;
     }
 
@@ -85,8 +88,8 @@ public class Chef implements Runnable{
         wait();
     }
 
-    public void setgStatus(GeneralStatus gStatus) {
-        this.gStatus = gStatus;
+    public static void setgStatus(GeneralStatus status) {
+        gStatus = status;
     }
 
     @Override

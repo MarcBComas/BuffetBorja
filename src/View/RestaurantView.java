@@ -40,6 +40,7 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         c.gridx = 1;
         c.gridy = 0;
         add(viewer,c);
+        pack();
     }
 
     public void refresh() {

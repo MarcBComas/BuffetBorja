@@ -13,7 +13,7 @@ public class Comensal implements Runnable{
     private ComensalStatus status;
     private Rellotge rellotge;
     private AreaBuffet[] buffets;
-    private GeneralStatus gStatus;
+    private static GeneralStatus gStatus;
 
     public Comensal(AreaBuffet[] buffets) {
         this.platsMenjats = 0;
@@ -21,7 +21,9 @@ public class Comensal implements Runnable{
         this.tempsTertulia = 0;
         this.tempsEspera = 0;
         this.status = ComensalStatus.AGAFANTPLAT;
-        estadistiques.comensalsPerEstat[this.status.ordinal()]++;
+        synchronized (estadistiques) {
+            estadistiques.comensalsPerEstat[this.status.ordinal()]++;
+        }
         this.rellotge = Rellotge.getRellotge();
         this.buffets = buffets;
     }
@@ -39,7 +41,9 @@ public class Comensal implements Runnable{
         int tempsMenjant = ParametresSimulacio.tempsConsumir.getValorAleatori();
         sleep(rellotge.minutsEnMilisegons(tempsMenjant));
         this.tempsMenjant += tempsMenjant;
-        estadistiques.tempsMenjant += tempsMenjant;
+        synchronized (estadistiques) {
+            estadistiques.tempsMenjant += tempsMenjant;
+        }
         this.platsMenjats++;
     }
 
@@ -48,7 +52,9 @@ public class Comensal implements Runnable{
         int tempsTertulia = ParametresSimulacio.tempsTertulia.getValorAleatori();
         sleep(rellotge.minutsEnMilisegons(tempsTertulia));
         this.tempsTertulia += tempsTertulia;
-        estadistiques.tempsTertulia += tempsTertulia;
+        synchronized (estadistiques) {
+            estadistiques.tempsTertulia += tempsTertulia;
+        }
     }
 
     public synchronized void agafarPlat() {
@@ -63,7 +69,9 @@ public class Comensal implements Runnable{
             }
         }
         this.tempsEspera += rellotge.getIntervalEnMinuts(iniciEspera);
-        estadistiques.tempsEsperant += rellotge.getIntervalEnMinuts(iniciEspera);
+        synchronized (estadistiques) {
+            estadistiques.tempsEsperant += rellotge.getIntervalEnMinuts(iniciEspera);
+        }
     }
 
     public void setStatus(ComensalStatus status) {
@@ -79,14 +87,13 @@ public class Comensal implements Runnable{
         return r.nextInt(3);
     }
 
-    public void setgStatus(GeneralStatus gStatus) {
-        this.gStatus = gStatus;
+    public static void setgStatus(GeneralStatus status) {
+        gStatus = status;
     }
 
     @Override
     public void run() {
         while(!(gStatus == GeneralStatus.STOPPED)) {
-
             while(gStatus == GeneralStatus.RUNNING) {
                 agafarPlat();
                 try {
