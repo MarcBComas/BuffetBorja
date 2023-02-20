@@ -10,7 +10,7 @@ public class EstadistiquesChefs {
         tempsDescansant = 0;
         tempsCuinant = 0;
         platsCuinats = 0;
-        chefsPerEstat = new int[ChefStatus.values().length];
+        chefsPerEstat = new int[] {0, 0, 0};
     }
 
     public int getTempsDescansant() {

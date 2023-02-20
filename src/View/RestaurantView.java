@@ -3,9 +3,7 @@ package View;
 import Controller.RestaurantController;
 
 import javax.swing.JFrame;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,7 +19,7 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         this.controller = controller;
         this.setName("Buffet");
         this.setVisible(true);
-        this.setSize(new Dimension(1800, 700));
+        this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -37,6 +35,7 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         add(this.panelComensals, c);
         c.gridy = 3;
         add(controlPanel, c);
+        c.gridheight = 3;
         c.gridx = 1;
         c.gridy = 0;
         add(viewer,c);
@@ -47,9 +46,11 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
         this.panelBuffet.setStatistics();
         this.panelChefs.setStatistics();
         this.panelComensals.setStatistics();
+        viewer.getGraphics().drawImage(viewer.getBG(), 0, 0, null);
+        viewer.draw();
     }
 
-    public void play() throws InterruptedException {
+    public void play() {
         this.controller.play();
     }
 
@@ -64,6 +65,11 @@ public class RestaurantView extends JFrame implements ActionListener, Runnable {
     @Override
     public void run() {
         while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             refresh();
         }
     }

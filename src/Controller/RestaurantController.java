@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Estadistiques;
+import Model.GeneralStatus;
 import Model.RestaurantModel;
 import View.RestaurantView;
 
@@ -8,16 +9,16 @@ public class RestaurantController {
     private RestaurantModel model;
     private RestaurantView view;
 
-    public void play() throws InterruptedException {
-        this.model.play();
+    public void play() {
+        this.model.setStatus(GeneralStatus.RUNNING);
     }
 
     public void pause() throws InterruptedException {
-        this.model.pause();
+        this.model.setStatus(GeneralStatus.PAUSED);
     }
 
     public void stop() {
-        this.model.stop();
+        this.model.setStatus(GeneralStatus.STOPPED);
     }
 
     public Estadistiques getStatistics() {

@@ -13,6 +13,6 @@ public class Rango {
 
     public int getValorAleatori() {
         Random r = new Random();
-        return r.nextInt(max - min) + min;
+        return r.nextInt((max - min) + 1) + min;
     }
 }

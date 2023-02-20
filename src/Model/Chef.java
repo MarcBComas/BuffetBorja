@@ -3,7 +3,7 @@ package Model;
 import static java.lang.Thread.sleep;
 
 public class Chef implements Runnable{
-    private static EstadistiquesChefs estadistiques = new EstadistiquesChefs();
+    private volatile static EstadistiquesChefs estadistiques = new EstadistiquesChefs();
     private int tempsTotalCuinant;
     private int tempsNoDescans;
     private int horariIniciDescans;
@@ -14,7 +14,7 @@ public class Chef implements Runnable{
     private Rellotge rellotge;
     private AreaBuffet buffet;
     private Grill grill;
-    private static GeneralStatus gStatus;
+    private volatile GeneralStatus gStatus;
 
     public Chef(Rellotge rellotge, AreaBuffet buffet, Grill grill) {
         this.tempsTotalCuinant = 0;
@@ -31,7 +31,7 @@ public class Chef implements Runnable{
         this.buffet = buffet;
         this.grill = grill;
     }
-    public synchronized void cocinar() throws InterruptedException {
+    public void cocinar() throws InterruptedException {
         if(this.grill.afegirPlat()) {
             setStatus(ChefStatus.CUINANT);
             sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsCuinantChef));
@@ -51,7 +51,7 @@ public class Chef implements Runnable{
         }
     }
 
-    public synchronized void descansar() throws InterruptedException {
+    public void descansar() throws InterruptedException {
         setStatus(ChefStatus.DESCANSANT);
         sleep(rellotge.minutsEnMilisegons(ParametresSimulacio.tempsDescansChef));
         synchronized (estadistiques) {
@@ -60,8 +60,9 @@ public class Chef implements Runnable{
         this.tempsNoDescans = 0;
     }
 
-    public synchronized void entregarPlat() throws InterruptedException {
+    public void entregarPlat() throws InterruptedException {
         setStatus(ChefStatus.ENTREGANT);
+        sleep(1000);
         Boolean entregat = false;
         while (!entregat) {
             entregat = buffet.afegirPlat();
@@ -88,13 +89,20 @@ public class Chef implements Runnable{
         wait();
     }
 
-    public static void setgStatus(GeneralStatus status) {
-        gStatus = status;
+    public void setgStatus(GeneralStatus status) {
+        this.gStatus = status;
     }
 
     @Override
     public void run() {
         while(!(gStatus == GeneralStatus.STOPPED)) {
+            while(gStatus == GeneralStatus.PAUSED) {
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             while (gStatus == GeneralStatus.RUNNING) {
                 try {
                     if (this.tempsNoDescans < 30) {

@@ -26,10 +26,4 @@ public class ParametresSimulacio {
         numChefPerGrill = new Rango(1, 3);
     }
 
-    public int getValorAleatori(int min, int max) {
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
-
 }

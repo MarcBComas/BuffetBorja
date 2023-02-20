@@ -5,7 +5,7 @@ import java.util.Random;
 import static java.lang.Thread.sleep;
 
 public class Comensal implements Runnable{
-    private static EstadistiquesComensals estadistiques = new EstadistiquesComensals();
+    private volatile static EstadistiquesComensals estadistiques = new EstadistiquesComensals();
     private int platsMenjats;
     private int tempsMenjant;
     private int tempsTertulia;
@@ -13,7 +13,7 @@ public class Comensal implements Runnable{
     private ComensalStatus status;
     private Rellotge rellotge;
     private AreaBuffet[] buffets;
-    private static GeneralStatus gStatus;
+    private volatile GeneralStatus gStatus;
 
     public Comensal(AreaBuffet[] buffets) {
         this.platsMenjats = 0;
@@ -36,7 +36,7 @@ public class Comensal implements Runnable{
         estadistiques = new EstadistiquesComensals();
     }
 
-    public synchronized void menjar() throws InterruptedException {
+    public void menjar() throws InterruptedException {
         setStatus(ComensalStatus.MENJANT);
         int tempsMenjant = ParametresSimulacio.tempsConsumir.getValorAleatori();
         sleep(rellotge.minutsEnMilisegons(tempsMenjant));
@@ -47,7 +47,7 @@ public class Comensal implements Runnable{
         this.platsMenjats++;
     }
 
-    public synchronized void tertulia() throws InterruptedException {
+    public void tertulia() throws InterruptedException {
         setStatus(ComensalStatus.XERRANT);
         int tempsTertulia = ParametresSimulacio.tempsTertulia.getValorAleatori();
         sleep(rellotge.minutsEnMilisegons(tempsTertulia));
@@ -57,12 +57,13 @@ public class Comensal implements Runnable{
         }
     }
 
-    public synchronized void agafarPlat() {
+    public void agafarPlat() throws InterruptedException {
         setStatus(ComensalStatus.AGAFANTPLAT);
         Boolean agafat = false;
         int areaBuffet = getBuffetRandom();
         int iniciEspera = rellotge.getMinutoActual();
         while(!agafat) {
+            sleep(2000);
             agafat = this.buffets[areaBuffet].retirarPlat();
             if(!agafat) {
                 areaBuffet = getBuffetRandom();
@@ -87,16 +88,23 @@ public class Comensal implements Runnable{
         return r.nextInt(3);
     }
 
-    public static void setgStatus(GeneralStatus status) {
-        gStatus = status;
+    public void setgStatus(GeneralStatus status) {
+        this.gStatus = status;
     }
 
     @Override
     public void run() {
         while(!(gStatus == GeneralStatus.STOPPED)) {
-            while(gStatus == GeneralStatus.RUNNING) {
-                agafarPlat();
+            while(gStatus == GeneralStatus.PAUSED) {
                 try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            while(gStatus == GeneralStatus.RUNNING) {
+                try {
+                    agafarPlat();
                     menjar();
                     tertulia();
                 } catch (InterruptedException e) {

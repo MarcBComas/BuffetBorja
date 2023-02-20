@@ -13,13 +13,7 @@ public class ControlPanel extends JPanel{
 
     public ControlPanel(RestaurantView view) {
         this.view = view;
-        bPlay.addActionListener(e -> {
-            try {
-                view.play();
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+        bPlay.addActionListener(e -> view.play());
         bPause.addActionListener(e -> {
             try {
                 view.pause();
